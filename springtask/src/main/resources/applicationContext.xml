@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+ <!--#################################quartz配置需要继承基类的任务#################################-->
+    <!--配置作业任务bean-->
+    <bean id="myDetailTaskExtend" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="com.du.quartz.MyDetailTaskExtend"/>
+    </bean>
+
+    <!--配置触发器1：每两秒触发一次-->
+    <bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail" ref="myDetailTaskExtend" />
+        <property name="startDelay" value="0" /><!-- 调度工厂实例化后，经过0秒开始执行调度 -->
+        <property name="repeatInterval" value="2000" /><!-- 每2秒调度一次 -->
+    </bean>
+
+    <!--配置触发器2：每一分钟触发一次-->
+    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="myDetailTaskExtend" />
+        <property name="cronExpression" value="3 * * * * ?" />
+    </bean>
+
+    <!--配置调度工厂-->
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="simpleTrigger" />
+                <ref bean="cronTrigger"/>
+            </list>
+        </property>
+    </bean>
+
+
+    <!--#################################quartz配置pojo任务#################################-->
+    <!--配置作业任务-->
+    <bean id="myDetailTaskPojo"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <bean class="com.du.quartz.MyDetailTaskPojo" />
+        </property>
+        <property name="targetMethod" value="doTask" />
+        <!-- 作业不并发调度 -->
+        <property name="concurrent" value="false" />
+    </bean>
+
+    <!--配置触发器1：每两秒触发一次-->
+    <bean id="simpleTrigger1" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail" ref="myDetailTaskPojo"/>
+        <property name="startDelay" value="0" /><!-- 调度工厂实例化后，经过0秒开始执行调度 -->
+        <property name="repeatInterval" value="13000" /><!-- 每2秒调度一次 -->
+    </bean>
+
+    <!--配置触发器2：每一分钟触发一次-->
+    <bean id="cronTrigger1" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="myDetailTaskPojo" />
+        <property name="cronExpression" value="2 * * * * ?" />
+    </bean>
+
+    <!--配置调度工厂-->
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <!--<ref bean="simpleTrigger1" />-->
+                <ref bean="cronTrigger1"/>
+            </list>
+        </property>
+    </bean>
+
+
+    <!--#################################springtask#################################-->
+    <context:component-scan base-package=" com.du.*" />
+    <!--#################################springtask配置文件任务#################################-->
+    <task:scheduled-tasks>
+        <task:scheduled ref="configurationTask" method="doTask" cron="0 * * * * ?"/>
+    </task:scheduled-tasks>
+
+    <!--#################################springtask注解方式任务#################################-->
+    <task:scheduler id="myScheduler" pool-size="10"/>
+    <task:annotation-driven scheduler="myScheduler" mode="proxy"/>
+
+    <!--#################################springtask简易注解方式任务#################################-->
+    <task:annotation-driven/>
+</beans>
