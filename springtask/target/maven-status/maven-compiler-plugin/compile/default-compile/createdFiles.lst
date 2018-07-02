@@ -1,0 +1,5 @@
+com\du\task\AnnotationTask.class
+com\du\util\MyUtil.class
+com\du\quartz\MyDetailTaskPojo.class
+com\du\task\ConfigurationTask.class
+com\du\quartz\MyDetailTaskExtend.class

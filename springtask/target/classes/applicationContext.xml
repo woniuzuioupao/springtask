@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+<!--
+
+ &lt;!&ndash;#################################quartz配置需要继承基类的任务#################################&ndash;&gt;
+    &lt;!&ndash;配置作业任务bean&ndash;&gt;
+    <bean id="myDetailTaskExtend" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="com.du.quartz.MyDetailTaskExtend"/>
+    </bean>
+
+    &lt;!&ndash;配置触发器1：每两秒触发一次&ndash;&gt;
+    <bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail" ref="myDetailTaskExtend" />
+        <property name="startDelay" value="0" />&lt;!&ndash; 调度工厂实例化后，经过0秒开始执行调度 &ndash;&gt;
+        <property name="repeatInterval" value="2000" />&lt;!&ndash; 每2秒调度一次 &ndash;&gt;
+    </bean>
+
+    &lt;!&ndash;配置触发器2：每一分钟触发一次&ndash;&gt;
+    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="myDetailTaskExtend" />
+        <property name="cronExpression" value="3 * * * * ?" />
+    </bean>
+
+    &lt;!&ndash;配置调度工厂&ndash;&gt;
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="simpleTrigger" />
+                <ref bean="cronTrigger"/>
+            </list>
+        </property>
+    </bean>
+
+
+    &lt;!&ndash;#################################quartz配置pojo任务#################################&ndash;&gt;
+    &lt;!&ndash;配置作业任务&ndash;&gt;
+    <bean id="myDetailTaskPojo"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <bean class="com.du.quartz.MyDetailTaskPojo" />
+        </property>
+        <property name="targetMethod" value="doTask" />
+        &lt;!&ndash; 作业不并发调度 &ndash;&gt;
+        <property name="concurrent" value="false" />
+    </bean>
+
+    &lt;!&ndash;配置触发器1：每两秒触发一次&ndash;&gt;
+    <bean id="simpleTrigger1" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail" ref="myDetailTaskPojo"/>
+        <property name="startDelay" value="0" />&lt;!&ndash; 调度工厂实例化后，经过0秒开始执行调度 &ndash;&gt;
+        <property name="repeatInterval" value="13000" />&lt;!&ndash; 每2秒调度一次 &ndash;&gt;
+    </bean>
+
+    &lt;!&ndash;配置触发器2：每一分钟触发一次&ndash;&gt;
+    <bean id="cronTrigger1" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="myDetailTaskPojo" />
+        <property name="cronExpression" value="2 * * * * ?" />
+    </bean>
+
+    &lt;!&ndash;配置调度工厂&ndash;&gt;
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                &lt;!&ndash;<ref bean="simpleTrigger1" />&ndash;&gt;
+                <ref bean="cronTrigger1"/>
+            </list>
+        </property>
+    </bean>
+
+-->
+
+    <!--#################################springtask#################################-->
+    <context:component-scan base-package=" com.du.*" />
+    <context:component-scan base-package=" kafka" />
+<!--    &lt;!&ndash;#################################springtask配置文件任务#################################&ndash;&gt;
+    <task:scheduled-tasks>
+        <task:scheduled ref="configurationTask" method="doTask" cron="0 * * * * ?"/>
+    </task:scheduled-tasks>
+
+    &lt;!&ndash;#################################springtask注解方式任务#################################&ndash;&gt;
+    <task:scheduler id="myScheduler" pool-size="10"/>
+    <task:annotation-driven scheduler="myScheduler" mode="proxy"/>-->
+
+    <!--#################################springtask简易注解方式任务#################################-->
+    <task:annotation-driven/>
+</beans>
