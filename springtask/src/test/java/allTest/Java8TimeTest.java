@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -29,5 +31,12 @@ public class Java8TimeTest {
         Long X = new Random().nextInt(10000)+5000L;
         System.out.println(X);
     }
+    @Test
+    public void tenull() {
+        List<String> x = null;
+        x.toString();
+        System.out.println(x);
+    }
+
 
 }
