@@ -126,7 +126,7 @@
       <find>refresh</find>
       <find>MethodInvokingJobDetailFactoryBean</find>
       <find>Worker</find>
-      <find>class Worker</find>
+      <find />
       <find>run()</find>
       <find>registrar</find>
       <find>finishRegistration</find>
@@ -201,7 +201,7 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="714" />
     <option name="y" value="88" />
     <option name="width" value="1160" />
@@ -622,7 +622,7 @@
       <workItem from="1529652096411" duration="2321000" />
       <workItem from="1529912284639" duration="2759000" />
       <workItem from="1529974393410" duration="10965000" />
-      <workItem from="1530514942583" duration="7435000" />
+      <workItem from="1530514942583" duration="8034000" />
     </task>
     <servers />
   </component>
@@ -659,7 +659,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41260000" />
+    <option name="totallyTimeSpent" value="41859000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="714" y="88" width="1160" height="1056" extended-state="0" />
